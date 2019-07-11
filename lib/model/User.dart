@@ -33,4 +33,15 @@ final int id;
                 password: json['password'],);
 
   }
+Map toMap() {
+  var map = new Map<String, dynamic>();
+  map["id"] = id;
+  map["firstName"] = firstName;
+  map["lastName"] = lastName;
+  map["email"] = email;
+  map["mobile"] = mobile;
+  map["password"] = password;
+
+  return map;
+}
 }

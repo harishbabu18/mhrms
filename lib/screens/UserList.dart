@@ -1,61 +1,109 @@
+import 'dart:async';
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
+
 
 import 'package:flutter/material.dart';
-import 'package:mhrms/model/User.dart';
 import 'package:http/http.dart' as http;
 
+import 'CreateUser.dart';
 
-class UserList extends StatelessWidget {
 
-  /*final List<String> entries = <String>['A', 'B', 'C', 'B', 'C', 'B', 'C', 'B', 'C', 'B', 'C', 'B', 'C', 'B', 'C', 'B', 'C', 'B', 'C', 'B', 'C', 'B', 'C', 'B', 'C', 'B', 'C', 'B', 'C'];
-  final List<int> colorCodes = <int>[600, 500, 100, 500, 100, 500, 100, 500, 100, 500, 100, 500, 100, 500, 100, 500, 100, 500, 100, 500, 100, 500, 100, 500, 100, 500, 100, 500, 100];*/
+class UserList extends StatefulWidget {
+  @override
+  UserListPageState createState() => new UserListPageState();
+}
 
-  Future<User> fetchPost() async {
-    final response =
-    await http.get('http://192.168.2.87:8080/user/1');
-
-    if (response.statusCode == 200) {
-      // If server returns an OK response, parse the JSON.
-      return User.fromJson(json.decode(response.body));
-
+class UserListPageState extends State<UserList> {
+  _launchURL(String toMailId, String subject, String body) async {
+    var url = 'mailto:$toMailId?subject=$subject&body=$body';
+    if (await canLaunch(url)) {
+      await launch(url);
     } else {
-      // If that response was not OK, throw an error.
-      throw Exception('Failed to load post');
+      throw 'Could not launch $url';
     }
   }
 
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: FutureBuilder<User>(
-          future: fetchPost(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Text(snapshot.data.firstName);
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
+  List data;
 
-            // By default, show a loading spinner.
-            return CircularProgressIndicator();
-          },
-        ),
-      ),/*new ListView.builder(
-          padding: const EdgeInsets.all(8.0),
-          itemCount: entries.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              height: 50,
-              color: Colors.amber[colorCodes[index]],
-              child: Center(child: Text('Entry ${entries[index]}')),
-            );
-          }
-      )
-      ,*/
+  Future<String> getData() async {
+    var response = await http.get(
+        Uri.encodeFull("http://192.168.1.3:8080/user"),
+        headers: {
+          "Accept": "application/json"
+        }
     );
+
+    this.setState(() {
+      data = json.decode(response.body);
+    });
+
+
+
+    return "Success!";
   }
 
+  @override
+  void initState(){
+    this.getData();
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return new Scaffold(
+      appBar: AppBar(
+        title: Text("List User"),
+      ),
+      body: /*new GridView.builder(gridDelegate: null, itemBuilder: null),*/new ListView.builder(
+        itemCount: data == null ? 0 : data.length,
+        itemBuilder: (BuildContext context, int index){
+          return new Card(
+            child:new Row( children: <Widget>[new Column(children: <Widget>[RaisedButton.icon(
+              onPressed: /*_launchURL(data[index]["email"],"Job Oppertunity","Job Oppertunity")*/null,
+              icon: Icon(Icons.email),
+              label: Text("E-Mail"),
+              color: Colors.cyanAccent,
+            ),RaisedButton.icon(
+              onPressed: () {},
+              icon: Icon(Icons.message),
+              label: Text("Message"),
+              color: Colors.cyanAccent,
+            )],),new Column(
+                children: <Widget>[new Text(data[index]["firstName"],style:TextStyle(fontSize: 20) ,),
+                                   new Text(data[index]["lastName"]),
+                                   new Text(data[index]["email"]),
+                                   new Text(data[index]["mobile"]),
+
+                ]) ,
+              new Column(
+                  children: <Widget>[RaisedButton.icon(
+                    onPressed: () {},
+                    icon: Icon(Icons.phone),
+                    label: Text("Call"),
+                    color: Colors.cyanAccent,
+                  ),
+                    RaisedButton.icon(
+                      onPressed: () => launch("tel://"+data[index]["mobile"]),
+                      icon: Icon(Icons.edit),
+                      label: Text("Edit"),
+                      color: Colors.cyanAccent,
+                    )
+
+                  ]) ,
+          ]),);
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreateUser()),
+          );
+        },
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ),
+    );
+  }
 }
-  
