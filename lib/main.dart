@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mhrms/screens/MyHomePage.dart';
 import 'package:mhrms/screens/UserList.dart';
 
 void main() => runApp(MyApp());

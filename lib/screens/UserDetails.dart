@@ -6,10 +6,12 @@ import 'package:http/http.dart' as http;
 
 
 class UserDetails extends StatelessWidget {
+  UserDetails({Key key, this.id}) : super(key: key);
+  String id;
 
-  Future<User> fetchPost() async {
+  /*Future<User> fetchPost() async {
     final response =
-    await http.get('http://192.168.1.3:8080/user/1');
+    await http.get('http://192.168.43.239:8080/user/'+id);
 
     if (response.statusCode == 200) {
       // If server returns an OK response, parse the JSON.
@@ -19,13 +21,13 @@ class UserDetails extends StatelessWidget {
       // If that response was not OK, throw an error.
       throw Exception('Failed to load post');
     }
-  }
+  }*/
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body:Center(child: Text(id),), /*Container(
         child: FutureBuilder<User>(
           future: fetchPost(),
           builder: (context, snapshot) {
@@ -41,7 +43,7 @@ class UserDetails extends StatelessWidget {
             return CircularProgressIndicator();
           },
         ),
-      ),
+      ),*/
     );
   }
 

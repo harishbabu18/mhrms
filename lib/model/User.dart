@@ -15,7 +15,7 @@ class User{
     );
   }*/
 
-final int id;
+  final int id;
   final String firstName;
   final String lastName;
   final String email;

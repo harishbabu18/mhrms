@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:url_launcher/url_launcher.dart';
-
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:mhrms/config/Config.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'CreateUser.dart';
-
+import 'UserDetails.dart';
 
 class UserList extends StatefulWidget {
   @override
@@ -15,6 +14,7 @@ class UserList extends StatefulWidget {
 }
 
 class UserListPageState extends State<UserList> {
+  String User_URL = Config.User_URL;
   _launchURL(String toMailId, String subject, String body) async {
     var url = 'mailto:$toMailId?subject=$subject&body=$body';
     if (await canLaunch(url)) {
@@ -24,12 +24,17 @@ class UserListPageState extends State<UserList> {
     }
   }
 
+  void _userdetails(String id){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => UserDetails(id:id)),
+    );
+  }
+
 
   List data;
 
   Future<String> getData() async {
     var response = await http.get(
-        Uri.encodeFull("http://192.168.1.3:8080/user"),
+        Uri.encodeFull(User_URL),
         headers: {
           "Accept": "application/json"
         }
@@ -39,9 +44,8 @@ class UserListPageState extends State<UserList> {
       data = json.decode(response.body);
     });
 
-
-
     return "Success!";
+
   }
 
   @override
@@ -52,46 +56,23 @@ class UserListPageState extends State<UserList> {
   @override
   Widget build(BuildContext context){
     return new Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text("List User"),
-      ),
-      body: /*new GridView.builder(gridDelegate: null, itemBuilder: null),*/new ListView.builder(
+      ),*/
+      body: new ListView.builder(
         itemCount: data == null ? 0 : data.length,
         itemBuilder: (BuildContext context, int index){
-          return new Card(
-            child:new Row( children: <Widget>[new Column(children: <Widget>[RaisedButton.icon(
-              onPressed: /*_launchURL(data[index]["email"],"Job Oppertunity","Job Oppertunity")*/null,
-              icon: Icon(Icons.email),
-              label: Text("E-Mail"),
-              color: Colors.cyanAccent,
-            ),RaisedButton.icon(
-              onPressed: () {},
-              icon: Icon(Icons.message),
-              label: Text("Message"),
-              color: Colors.cyanAccent,
-            )],),new Column(
-                children: <Widget>[new Text(data[index]["firstName"],style:TextStyle(fontSize: 20) ,),
-                                   new Text(data[index]["lastName"]),
-                                   new Text(data[index]["email"]),
-                                   new Text(data[index]["mobile"]),
+          return InkWell(onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => UserDetails(id:data[index]["id"].toString())));},
+              child:new Card(
+                child:new Row( mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[new Column(
+                    children: <Widget>[
+                      new Text(data[index]["firstName"],style:TextStyle(fontSize: 20) ,),
+                      new Text(data[index]["lastName"]),
+                      new Text(data[index]["email"]),
+                      new Text(data[index]["mobile"]),
 
-                ]) ,
-              new Column(
-                  children: <Widget>[RaisedButton.icon(
-                    onPressed: () {},
-                    icon: Icon(Icons.phone),
-                    label: Text("Call"),
-                    color: Colors.cyanAccent,
-                  ),
-                    RaisedButton.icon(
-                      onPressed: () => launch("tel://"+data[index]["mobile"]),
-                      icon: Icon(Icons.edit),
-                      label: Text("Edit"),
-                      color: Colors.cyanAccent,
-                    )
-
-                  ]) ,
-          ]),);
+                    ])
+                ]),));
         },
       ),
       floatingActionButton: FloatingActionButton(
