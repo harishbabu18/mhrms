@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mhrms/config/Config.dart';
+import 'package:http/http.dart' as http;
 
 
 class UploadImage extends StatefulWidget {
@@ -17,6 +19,8 @@ class UploadImage extends StatefulWidget {
 }
 
 class UploadImageState extends State<UploadImage> {
+  //File file;
+
   //
   static final String Upload_URL = Config.Upload_URL;
 
@@ -50,14 +54,32 @@ class UploadImageState extends State<UploadImage> {
   }
   Response response;
   upload(String fileName) async  {
-    Dio dio = new Dio();
+
+    if (tmpFile == null) return;
+    String base64Image = base64Encode(tmpFile.readAsBytesSync());
+    String fileName = tmpFile.path.split("/").last;
+
+    http.Response response  = await http.post(Uri.encodeFull(Upload_URL),
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },body: jsonEncode({
+          "image": base64Image,
+          "name": fileName,
+        })
+        ,encoding: Encoding.getByName("utf-8"));
+    setStatus(response.toString());
+
+
+
+    /*Dio dio = new Dio();
 
     FormData formData = new FormData.from({
       "file": new UploadFileInfo(tmpFile, fileName)
     });
     
     response = await dio.post(Uri.encodeFull(Upload_URL),data: formData);
-    setStatus(response.toString());
+    setStatus(response.toString());*/
   }
 
   Widget showImage() {

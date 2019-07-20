@@ -41,7 +41,6 @@ Map toMap() {
   map["email"] = email;
   map["mobile"] = mobile;
   map["password"] = password;
-
   return map;
 }
 }
