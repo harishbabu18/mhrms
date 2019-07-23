@@ -7,13 +7,13 @@ import 'package:mhrms/widgets/InputFormField.dart';
 import 'package:http/http.dart' as http;
 import 'UserList.dart';
 
-class CreateUser extends  StatefulWidget {
-  CreateUser({Key key, this.user}) : super(key: key);
+class EditUser extends  StatefulWidget {
+  EditUser({Key key, this.user}) : super(key: key);
   final Future<User> user;
   @override
-  _CreateUserState createState() => _CreateUserState();
+  _EditUserState createState() => _EditUserState();
 }
-class _CreateUserState extends State<CreateUser> {
+class _EditUserState extends State<EditUser> {
   String uservalue="Status";
   String User_URL = Config.User_URL;
   TextEditingController firstnameController = new TextEditingController();
@@ -22,7 +22,7 @@ class _CreateUserState extends State<CreateUser> {
   TextEditingController mobileController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
 
-  Future<User> createUser(String url, {Map body}) async {
+  Future<User> EditUser(String url, {Map body}) async {
     http.Response response  = await http.post(Uri.encodeFull(url),
         headers: {
           "Accept": "application/json",
@@ -41,7 +41,7 @@ class _CreateUserState extends State<CreateUser> {
   }
 
 
-  void createUserValue(){
+  void EditUserValue(){
     User newUser = new User(
         firstName:firstnameController.text,
         lastName: lastnameController.text,
@@ -49,7 +49,7 @@ class _CreateUserState extends State<CreateUser> {
         mobile: mobileController.text,
         password: passwordController.text
     );
-    createUser(User_URL,body: newUser.toMap());
+    EditUser(User_URL,body: newUser.toMap());
   }
 
 
@@ -73,7 +73,7 @@ class _CreateUserState extends State<CreateUser> {
               InputFormField(label: "Mobile",controller:mobileController),
               InputFormField(label: "Password",controller:passwordController),
                 new RaisedButton(
-                  onPressed: createUserValue,
+                  onPressed: EditUserValue,
                   child: const Text("Create"),
                 )
               ,Text(uservalue)],

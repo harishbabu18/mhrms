@@ -7,7 +7,6 @@ class ListWithContact extends StatelessWidget {
   final String email;
   final String mobile;
 
-
   ListWithContact({this.firstName,
     this.lastName,
     this.email,

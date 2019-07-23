@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mhrms/config/Config.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'CreateUser.dart';
+
+import 'UploadImage.dart';
 import 'UserDetails.dart';
 
 class UserList extends StatefulWidget {
@@ -56,9 +57,9 @@ class UserListPageState extends State<UserList> {
   @override
   Widget build(BuildContext context){
     return new Scaffold(
-      /*appBar: AppBar(
-        title: Text("List User"),
-      ),*/
+      appBar: AppBar(
+        title: Text("Upload Image Demo"),
+      ),
       body: new ListView.builder(
         itemCount: data == null ? 0 : data.length,
         itemBuilder: (BuildContext context, int index){
@@ -79,7 +80,7 @@ class UserListPageState extends State<UserList> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CreateUser()),
+            MaterialPageRoute(builder: (context) => UploadImage()),
           );
         },
         tooltip: 'Increment',

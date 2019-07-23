@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http_parser/http_parser.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:mhrms/config/Config.dart';
-import 'package:http/http.dart' as http;
+
+import 'CreateUser.dart';
 
 
 class UploadImage extends StatefulWidget {
@@ -19,9 +19,7 @@ class UploadImage extends StatefulWidget {
 }
 
 class UploadImageState extends State<UploadImage> {
-  //File file;
 
-  //
   static final String Upload_URL = Config.Upload_URL;
 
   Future<File> file;
@@ -35,6 +33,13 @@ class UploadImageState extends State<UploadImage> {
       file = ImagePicker.pickImage(source: ImageSource.gallery);
     });
     setStatus('');
+  }
+  cameraImage(){
+    setState(() {
+      file = ImagePicker.pickImage(source: ImageSource.camera);
+    });
+    setStatus('');
+
   }
 
   setStatus(String message) {
@@ -52,7 +57,7 @@ class UploadImageState extends State<UploadImage> {
     String fileName = tmpFile.path.split('/').last;
     upload(fileName);
   }
-  Response response;
+  
   upload(String fileName) async  {
 
     if (tmpFile == null) return;
@@ -68,18 +73,7 @@ class UploadImageState extends State<UploadImage> {
           "name": fileName,
         })
         ,encoding: Encoding.getByName("utf-8"));
-    setStatus(response.toString());
-
-
-
-    /*Dio dio = new Dio();
-
-    FormData formData = new FormData.from({
-      "file": new UploadFileInfo(tmpFile, fileName)
-    });
-    
-    response = await dio.post(Uri.encodeFull(Upload_URL),data: formData);
-    setStatus(response.toString());*/
+    setStatus(response.body);
   }
 
   Widget showImage() {
@@ -128,6 +122,10 @@ class UploadImageState extends State<UploadImage> {
               onPressed: chooseImage,
               child: Text('Choose Image'),
             ),
+            OutlineButton(
+              onPressed: cameraImage,
+              child: Text('Camera'),
+            ),
             SizedBox(
               height: 20.0,
             ),
@@ -138,6 +136,14 @@ class UploadImageState extends State<UploadImage> {
             OutlineButton(
               onPressed: startUpload,
               child: Text('Upload Image'),
+            ),
+            OutlineButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CreateUser()),
+                );
+              },child: Text("Skip"),
             ),
             SizedBox(
               height: 20.0,
