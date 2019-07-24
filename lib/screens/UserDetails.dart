@@ -18,6 +18,11 @@ class UserDetails extends StatefulWidget {
 
 class _UserDetailsState extends State<UserDetails> {
   String User_URL = Config.User_URL;
+  String firstname = "First Name Loading...";
+  String lastName = "Last Name Loading ...";
+  String email = "Last E-Mail Loading ...";
+  String mobile = "Last Mobile Loading ...";
+
   var data;
   Future<String> getData() async {
     var response = await http.get(
@@ -29,6 +34,10 @@ class _UserDetailsState extends State<UserDetails> {
 
     this.setState(() {
       data = json.decode(response.body);
+      firstname = data["firstName"];
+      lastName = data["lastName"];
+      email = data["email"];
+      mobile = data["mobile"];
     });
 
     return "Success!";
@@ -49,9 +58,9 @@ class _UserDetailsState extends State<UserDetails> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(data["firstName"]),
-            Text(data["lastName"]),
-            Text(data["mobile"]),
+            Text(firstname),
+            Text(lastName),
+            Text(mobile),
             IconButton(
               icon: Icon(Icons.phone),
               padding: const EdgeInsets.all(8.0),
@@ -59,7 +68,7 @@ class _UserDetailsState extends State<UserDetails> {
               onPressed: null,
             ),
             RaisedButton(child: Text("International Call"),),
-            Text(data["email"]),
+            Text(email),
             IconButton(
               icon: Icon(Icons.email),
               padding: const EdgeInsets.all(8.0),

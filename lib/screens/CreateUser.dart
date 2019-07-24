@@ -1,11 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mhrms/model/User.dart';
-import 'package:mhrms/config/Config.dart';
-import 'package:mhrms/widgets/InputFormField.dart';
 import 'package:http/http.dart' as http;
-import 'UserList.dart';
+import 'package:mhrms/config/Config.dart';
+import 'package:mhrms/model/User.dart';
+import 'package:mhrms/widgets/InputFormField.dart';
 
 class CreateUser extends  StatefulWidget {
   CreateUser({Key key, this.user}) : super(key: key);
@@ -21,6 +20,14 @@ class _CreateUserState extends State<CreateUser> {
   TextEditingController emailController = new TextEditingController();
   TextEditingController mobileController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
+
+  void TextBoxClear(){
+    firstnameController.clear();
+    lastnameController.clear();
+    emailController.clear();
+    mobileController.clear();
+    passwordController.clear();
+  }
 
   Future<User> createUser(String url, {Map body}) async {
     http.Response response  = await http.post(Uri.encodeFull(url),
@@ -50,6 +57,8 @@ class _CreateUserState extends State<CreateUser> {
         password: passwordController.text
     );
     createUser(User_URL,body: newUser.toMap());
+
+
   }
 
 
@@ -75,19 +84,14 @@ class _CreateUserState extends State<CreateUser> {
                 new RaisedButton(
                   onPressed: createUserValue,
                   child: const Text("Create"),
+                ),
+                new RaisedButton(
+                  onPressed: TextBoxClear,
+                  child: const Text("Clear"),
                 )
               ,Text(uservalue)],
             ),
-          ),floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => UserList()),
-        );
-      },
-      tooltip: 'Increment',
-      child: Icon(Icons.list),
-    ),);
+          ),);
 
   }
 }
