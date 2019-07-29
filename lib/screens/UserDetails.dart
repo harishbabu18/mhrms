@@ -5,17 +5,11 @@ import 'package:http/http.dart' as http;
 import 'package:mhrms/config/Config.dart';
 
 class UserDetails extends StatefulWidget {
-
-
   UserDetails({Key key, this.id}) : super(key: key);
   final String id;
-
-
-
   @override
   _UserDetailsState createState() => _UserDetailsState();
 }
-
 class _UserDetailsState extends State<UserDetails> {
   String User_URL = Config.User_URL;
   String firstname = "First Name Loading...";
@@ -73,6 +67,18 @@ class _UserDetailsState extends State<UserDetails> {
               icon: Icon(Icons.email),
               padding: const EdgeInsets.all(8.0),
               color: Colors.blue,
+              onPressed: null,
+            ),
+            IconButton(
+              icon: Icon(Icons.delete_forever),
+              padding: const EdgeInsets.all(8.0),
+              color: Colors.red,
+              onPressed: null,
+            ),
+            IconButton(
+              icon: Icon(Icons.edit),
+              padding: const EdgeInsets.all(8.0),
+              color: Colors.red,
               onPressed: null,
             ),
 

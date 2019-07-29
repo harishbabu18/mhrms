@@ -95,6 +95,7 @@ class UserListPageState extends State<UserList> {
         title: Text("User Details-Page-"+(pageNo+1).toString()+"/"+totalpages.toString()),
           actions: <Widget>[
             IconButton(icon: Icon(Icons.arrow_left),onPressed: previosPage,),
+            IconButton(icon: Icon(Icons.search),onPressed: previosPage,),
             IconButton(icon: Icon(Icons.arrow_right),onPressed: nextPage,)
           ]
 
@@ -103,17 +104,7 @@ class UserListPageState extends State<UserList> {
         controller: _scrollController,
         itemCount: data == null ? 0 : data.length,
         itemBuilder: (BuildContext context, int index){
-          return InkWell(onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => UserDetails(id:data[index]["id"].toString())));},
-              child:new Card(
-                child:new Row( mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[new Column(
-                    children: <Widget>[
-                      new Text(data[index]["firstName"],style:TextStyle(fontSize: 20) ,),
-                      new Text(data[index]["lastName"]),
-                      new Text(data[index]["email"]),
-                      new Text(data[index]["mobile"]),
-
-                    ])
-                ]),));
+          return _listItem(index);
         },
       ),
            onRefresh: refreshlist),
@@ -129,6 +120,34 @@ class UserListPageState extends State<UserList> {
         child: Icon(Icons.add),
       ),
     );
+  }
+
+  _searchBar(){
+    return Padding(padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: InputDecoration(hintText: "Search .."),
+        onChanged: (text){
+
+
+        },
+      ),
+    );
+  }
+
+
+  _listItem(index){
+    return InkWell(onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => UserDetails(id:data[index]["id"].toString())));},
+        child:new Card(
+          child:new Row( mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[new Column(
+              children: <Widget>[
+                new Text(data[index]["firstName"],style:TextStyle(fontSize: 20) ,),
+                new Text(data[index]["lastName"]),
+                new Text(data[index]["email"]),
+                new Text(data[index]["mobile"]),
+
+              ])
+          ]),));
+
   }
 
 
